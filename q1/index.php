@@ -1,7 +1,8 @@
 <?php
     include_once './db.php';
-
     $Title = new myDataBase('localhost', 'utf8', 'bquiz');
+
+    $img = $Title->searchByTarget('titles', ['display'=>1]);
 ?>
 
 <!DOCTYPE html>
@@ -28,6 +29,7 @@
 
     <main class="container">
         <h3 class="text-center">網站標題管理</h3><hr>
+        <img src="./img/<?=$img[0]['img']?>" alt="">
 
         <form action="./edit_title.php" method="post">
 
@@ -48,9 +50,9 @@
                 <tr>
                     <td><img src="./img/<?=$row['img']?>" style="width:300px; height:30px;"></td>
                     <td><input type="text" name="text[]" id="" value="<?=$row['text']?>" style="width:90%; text-align:center;"></td>
-                    <td><input type="radio" name="" id=""></td>
-                    <td><input type="checkbox" name="del[]" id="" value="<?=$row['id']?>"></td>
-                    <td><input type="button" class="btn btn-primary" value="更新圖片"></td>
+                    <td><input type="radio" name="display" id="" value="<?=$row['id']?>"></td>
+                    <td><input type="checkbox" name="del[id][]" id="" value="<?=$row['id']?>"></td>
+                    <td><input type="button" class="btn btn-primary" value="更新圖片" onclick="op('#cover','#cvr','upload_title.php?id=<?=$row['id']?>')"></td>
                     <input type="text" name="id[]" value="<?=$row['id']?>" hidden>
                 </tr>
 

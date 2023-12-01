@@ -10,13 +10,10 @@
         }
         else{
             $row = $Title->searchByTarget('titles', ['id'=>$id]);
-            if(isset($_POST['display']) && $_POST['display'] == $id){
-                $row[0]['display'] = 1;
-            }
             $row[0]['text'] = $_POST['text'][$key];
             $Title->updateData('titles', $row[0]);
         }
     }
 
-    // header('location:./index.php');
+    header('location:./index.php');
 ?>

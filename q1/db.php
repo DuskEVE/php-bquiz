@@ -73,7 +73,7 @@
     
             if(is_array($target)) $sql = $sql."`{$targetType}` in ('".implode("','", $target)."')";
             else $sql = $sql."`{$targetType}`='{$target}'";
-
+            
             $arr = $pdo->query($sql)->fetchAll(PDO::FETCH_ASSOC);
             return $arr;
         }
@@ -82,8 +82,8 @@
             $pdo = $this->dbLogIn();
             $targetSet = $this->arrayToString($targets);
 
-            $sql = "select `id`, `uni_id`, `name`, `dept`, `graduate_at` from `{$tableName}` where {$targetSet}";
-    
+            $sql = "select * from `{$tableName}` where {$targetSet}";
+            // echo $sql;
             $arr = $pdo->query($sql)->fetchAll(PDO::FETCH_ASSOC);
             return $arr;
         }
@@ -91,7 +91,14 @@
         public function updateData($tableName, $datas){
             $pdo = $this->dbLogIn();
             $sql = null;
-            $dataSet = $this->arrayToString($datas);
+            $dataSet = [];
+            foreach($datas as $key=>$target){
+                if($key != 'id'){
+                    $str = " `{$key}`='{$target}'";
+                    array_push($dataSet, $str);
+                }
+            }
+            $dataSet = implode(",", $dataSet);
     
             if(isset($datas['id'])){
                 $sql = "update `".$tableName."` set ".$dataSet.
@@ -101,7 +108,7 @@
                 $sql = "insert into {$tableName} (`".implode("`,`", array_keys($datas))."`) 
                     values ('".implode("','", array_values($datas))."')";
             }
-    
+            // echo $sql.'<br>';
             $result = $pdo->exec($sql);
             if($result > 0) return "成功更改{$result}筆資料";
             else if($result == 0) return "未變更任何資料(輸入與原本內容相同)";
@@ -113,7 +120,8 @@
             $sql = "Delete from {$tableName} where ";
     
             if(is_array($id)) $sql = $sql."`id` in ('".implode("','", $id)."')";
-            else $sql = $sql."`id`='{$id}'".implode("','", $id)."')";
+            else $sql = $sql."`id`='{$id}'";
+            // echo $sql.'<br>';
     
             $result = $pdo->exec($sql);
             if($result > 0) return "成功刪除{$result}筆資料";
